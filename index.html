@@ -1,95 +1,1515 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>С 8 Марта!</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С 8 марта!</title>
+    <style>
+    /* Основной фон */
+    body {
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        background: radial-gradient(circle, #0a0a1a, #000033, #000022);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Добавить в style.css */
+    body::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, transparent 60%, rgba(0,0,33,0.8));
+        animation: pulseGlow 4s infinite;
+    }
+
+    @keyframes pulseGlow {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.6; }
+    }
+    /* Звезды */
+    .stars {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        overflow: hidden;
+        z-index: 0;
+    }
+
+    .star {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        animation: twinkle 2s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 1; }
+    }
+
+    .animated-bouquet .glow {
+        animation: glowBreath 3s ease-in-out infinite;
+    }
+
+    @keyframes glowBreath {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    /* Вступительный экран */
+    .intro-screen {
+        text-align: center;
+        color: white;
+        position: relative;
+        z-index: 2;
+        padding: 20px;
+        max-width: 600px;
+        transition: opacity 1s ease;
+    }
+
+    /* Текст */
+    .intro-screen h1 {
+        font-size: 4rem;
+        margin-bottom: 10px;
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: 0 0 10px rgba(255, 111, 97, 0.5), 0 0 20px rgba(255, 111, 97, 0.5), 0 0 30px rgba(255, 111, 97, 0.5);
+        animation: fadeIn 2s ease-in-out forwards;
+    }
+
+    .intro-screen h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        color: rgba(255, 255, 255, 0.8);
+        text-shadow: 0 0 10px rgba(255, 111, 97, 0.5), 0 0 20px rgba(255, 111, 97, 0.5), 0 0 30px rgba(255, 111, 97, 0.5);
+        animation: fadeIn 3s ease-in-out forwards;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    /* Кнопка */
+    #openBtn {
+        padding: 15px 30px;
+        font-size: 1.5rem;
+        background-color: rgba(255, 111, 97, 0.2);
+        color: rgba(255, 255, 255, 0.9);
+        border: 2px solid rgba(255, 111, 97, 0.9);
+        border-radius: 50px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        animation: fadeIn 4s ease-in-out forwards;
+        outline: none;
+    }
+
+    #openBtn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300%;
+        height: 300%;
+        background: radial-gradient(circle, rgba(255, 111, 97, 0.5), transparent);
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.5s ease;
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    #openBtn:hover::before {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    #openBtn:hover {
+        background-color: rgba(255, 111, 97, 0.3);
+        box-shadow: 0 0 15px rgba(255, 111, 97, 0.5), 0 0 30px rgba(255, 111, 97, 0.5);
+    }
+
+    #openBtn:active {
+        transform: scale(0.95);
+    }
+
+    #openBtn span {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Экран с поздравлением */
+    .congrats-screen {
+        display: none;
+        text-align: center;
+        color: white;
+        position: absolute;
+        z-index: 3;
+        padding: 20px;
+        max-width: 600px;
+        animation: fadeIn 1s ease-in-out forwards;
+    }
+
+    /* Добавить в style.css */
+    .petal, .particle, .star {
+        will-change: transform, opacity;
+        backface-visibility: hidden;
+    }
+
+    .congrats-screen.visible {
+        display: block;
+    }
+
+    .congrats-screen h2 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        text-shadow: 0 0 10px rgba(255, 111, 97, 0.5), 0 0 20px rgba(255, 111, 97, 0.5);
+    }
+
+    .congrats-screen p {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+        line-height: 1.5;
+    }
+
+    /* Стили для лепестков */
+    #petals-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none; /* Чтобы лепестки не мешали кликам */
+        overflow: hidden; /* Чтобы лепестки не выходили за пределы экрана */
+        z-index: 1;
+    }
+
+    .petal {
+        position: absolute;
+        height: auto;
+        animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+        0% {
+            transform: translateY(-50px) translateX(0) rotate(0deg);
+            opacity: 1;
+        }
+        50% {
+            transform: translateY(50vh) translateX(var(--drift)) rotate(180deg);
+            opacity: 0.8;
+        }
+        100% {
+            transform: translateY(100vh) translateX(calc(var(--drift) * 2)) rotate(360deg);
+            opacity: 0;
+        }
+    }
+
+    /* Замена стилей для букета на стили для розы в колбе */
+    .animated-bouquet {
+        position: relative;
+        width: 200px;
+        height: 250px;
+        margin: 0 auto;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        transform: scale(0.8);
+    }
+
+    .animated-bouquet:hover {
+        transform: scale(0.85);
+    }
+
+    .animated-bouquet:active {
+        transform: scale(0.75);
+    }
+
+    /* Стили для розы в колбе */
+    .animated-bouquet .container {
+        width: 100px;
+        height: 300px;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        transform: scale(0.6);
+    }
+
+    .animated-bouquet .container div {
+        position: absolute;
+    }
+
+    .animated-bouquet .container .glass {
+        height: 420px;
+        width: 250px;
+        border: 3px solid rgba(255, 255, 255, 0.5);
+        border-radius: 300px 300px 0px 0px;
+        left: -80px;
+        top: -100px;
+        border-bottom: 15px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .animated-bouquet .container .glass:after {
+        width: 8px;
+        background: rgba(255, 255, 255, 0.28);
+        content: '';
+        position: absolute;
+        height: 80px;
+        top: 430px;
+        border-radius: 100px;
+        left: 10px;
+        top: 180px;
+    }
+
+    .animated-bouquet .container .glass:before {
+        width: 8px;
+        background: rgba(255, 255, 255, 0.28);
+        content: '';
+        position: absolute;
+        height: 15px;
+        top: 430px;
+        border-radius: 100px;
+        left: 10px;
+        top: 280px;
+    }
+
+    .animated-bouquet .container .glow {
+        position: absolute;
+        width: 170px;
+        height: 170px;
+        border-radius: 100%;
+        border: 1px solid rgba(245, 148, 184, 0.47);
+        box-shadow: 0px 0px 10px #f594b8;
+        left: -40px;
+        top: -40px;
+        transition: all 0.5s ease;
+        animation: glowing 2.5s ease-in-out infinite;
+    }
+
+    .animated-bouquet .container .rose-petals > div {
+        background: #d52d58;
+        width: 45px;
+        height: 80px;
+        position: absolute;
+        transition: all 0.5s ease-out;
+    }
+
+    .animated-bouquet .container .rose-petals > div:nth-child(1) {
+        border-radius: 15px;
+        left: 20px;
+        top: -6px;
+        background: #d52d58;
+    }
+
+    .animated-bouquet .container .rose-petals > div:nth-child(2),
+    .animated-bouquet .container .rose-petals > div:nth-child(4),
+    .animated-bouquet .container .rose-petals > div:nth-child(6) {
+        border-radius: 0px 30px 0px 30px;
+        background: #b81b43;
+        left: 0;
+        transform-origin: bottom right;
+    }
+
+    .animated-bouquet .container .rose-petals > div:nth-child(3),
+    .animated-bouquet .container .rose-petals > div:nth-child(5),
+    .animated-bouquet .container .rose-petals > div:nth-child(7) {
+        border-radius: 30px 0px 30px 0px;
+        left: 40px;
+        transform-origin: bottom left;
+    }
+
+    .animated-bouquet .container .rose-petals > div:nth-child(2) {
+        animation: openRose2 3s ease-in-out;
+        animation-fill-mode: forwards;
+        z-index: 5;
+        background: #9e183a;
+        top: 10px;
+        height: 70px;
+        animation-delay: 2s;
+    }
+
+    .animated-bouquet .container .rose-petals > div:nth-child(3) {
+        animation: openRose3 3s ease-in-out;
+        animation-fill-mode: forwards;
+        z-index: 4;
+        background: #9e183a;
+        top: 10px;
+        height: 70px;
+        animation-delay: 2s;
+    }
+
+    .animated-bouquet .container .rose-petals > div:nth-child(4) {
+        animation: openRose4 3s ease-in-out;
+        animation-fill-mode: forwards;
+        z-index: 3;
+        background: #b81b43;
+        top: 5px;
+        height: 75px;
+        animation-delay: 2s;
+    }
+
+    .animated-bouquet .container .rose-petals > div:nth-child(5) {
+        animation: openRose5 3s ease-in-out;
+        animation-fill-mode: forwards;
+        z-index: 2;
+        background: #b81b43;
+        top: 5px;
+        height: 75px;
+        animation-delay: 2s;
+    }
+
+    .animated-bouquet .container .rose-petals > div:nth-child(6) {
+        animation: openRose6 3s ease-in-out;
+        animation-fill-mode: forwards;
+        z-index: 1;
+        background: #c9204b;
+        animation-delay: 2s;
+    }
+
+    .animated-bouquet .container .rose-petals > div:nth-child(7) {
+        animation: openRose7 3s ease-in-out;
+        animation-fill-mode: forwards;
+        z-index: 0;
+        background: #c9204b;
+        animation-delay: 2s;
+    }
+
+    .animated-bouquet .container .rose-leaves > div:nth-last-child(1) {
+        width: 55px;
+        height: 30px;
+        background: #338f37;
+        position: absolute;
+        top: 60px;
+        left: 15px;
+        border-radius: 100px;
+    }
+
+    .animated-bouquet .container .rose-leaves > div:nth-child(1) {
+        width: 6px;
+        height: 230px;
+        border: none;
+        top: 80px;
+        background: #066406;
+        left: 40px;
+    }
+
+    .animated-bouquet .container .thorns > div {
+        width: 30px;
+        height: 30px;
+        background: #066406;
+        top: 100px;
+        left: 10px;
+    }
+
+    .animated-bouquet .container .thorns > div:after {
+        width: 41px;
+        height: 31px;
+        border-radius: 100%;
+        background: #122139;
+        content: "";
+        position: absolute;
+        left: -12px;
+        top: 17px;
+    }
+
+    .animated-bouquet .container .thorns > div:before {
+        width: 41px;
+        height: 31px;
+        border-radius: 100%;
+        background: #122139;
+        content: "";
+        position: absolute;
+        left: -11px;
+        top: -11px;
+        z-index: 0;
+    }
+
+    .animated-bouquet .container .thorns > div:nth-child(2) {
+        top: 150px;
+        transform: rotate(180deg);
+        left: 45px;
+    }
+
+    .animated-bouquet .container .thorns > div:nth-child(3) {
+        top: 180px;
+    }
+
+    .animated-bouquet .container .thorns > div:nth-child(4) {
+        top: 220px;
+        transform: rotate(180deg);
+        left: 45px;
+    }
+
+    .animated-bouquet .container .sparkles {
+        bottom: -40px;
+    }
+
+    .animated-bouquet .container .sparkles > div {
+        width: 4px;
+        height: 4px;
+        border-radius: 100px;
+        background: #ff96c0;
+        box-shadow: 0px 0px 12px 2px #ff4e85;
+        bottom: 0;
+        opacity: 0;
+        animation: sparkle 4s ease-in-out infinite;
+    }
+
+    .animated-bouquet .container .sparkles > div:nth-child(1) {
+        left: 60px;
+        animation-delay: 3s;
+    }
+
+    .animated-bouquet .container .sparkles > div:nth-child(2) {
+        left: 158px;
+        animation-delay: 2s;
+    }
+
+    .animated-bouquet .container .sparkles > div:nth-child(3) {
+        left: -22px;
+        animation-delay: 1s;
+    }
+
+    .animated-bouquet .container .sparkles > div:nth-child(4) {
+        left: 10px;
+        animation-delay: 1s;
+    }
+
+    .animated-bouquet .container .sparkles > div:nth-child(5) {
+        left: 177px;
+        animation-delay: 3s;
+    }
+
+    .animated-bouquet .container .sparkles > div:nth-child(6) {
+        left: -82px;
+        animation-delay: 2s;
+    }
+
+    .animated-bouquet .container .sparkles > div:nth-child(7) {
+        left: 45px;
+        animation-delay: 3s;
+    }
+
+    .animated-bouquet .container .sparkles > div:nth-child(8) {
+        left: 74px;
+        animation-delay: 3s;
+    }
+
+    .animated-bouquet .container .sparkles > div:nth-child(9) {
+        left: -79px;
+        animation-delay: 2s;
+    }
+
+    /* Анимации для розы */
+    @keyframes sparkle {
+        50% {
+            opacity: 1;
+        }
+        100% {
+            bottom: 250px;
+        }
+    }
+
+    @keyframes openRose2 {
+        50% {
+            transform: rotate(-90deg);
+            top: 80px;
+            left: 100px;
+        }
+        100% {
+            transform: rotate(-60deg);
+            top: 210px;
+            left: -30px;
+        }
+    }
+
+    @keyframes openRose3 {
+        100% {
+            transform: rotate(60deg);
+        }
+    }
+
+    @keyframes openRose4 {
+        100% {
+            transform: rotate(-30deg);
+        }
+    }
+
+    @keyframes openRose5 {
+        100% {
+            transform: rotate(30deg);
+        }
+    }
+
+    @keyframes openRose6 {
+        50% {
+            transform: rotate(-90deg);
+            top: 80px;
+            left: 100px;
+        }
+        100% {
+            transform: rotate(-60deg);
+            top: 210px;
+            left: -30px;
+        }
+    }
+
+    @keyframes openRose7 {
+        100% {
+            transform: rotate(60deg);
+        }
+    }
+
+    @keyframes glowing {
+        50% {
+            box-shadow: 0px 0px 60px #f594b8;
+        }
+    }
+
+    /* Обновляем стили подсказки */
+    .bouquet-hint {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 15px;
+        animation: pulse 2s infinite;
+        text-align: center;
+    }
+
+    /* Эффект свечения при наведении на букет */
+    .animated-bouquet:hover .flower {
+        box-shadow: 0 0 15px rgba(255, 102, 102, 0.8);
+    }
+
+    /* Контейнер для комплиментов */
+    .compliment-container {
+        position: relative;
+        min-height: 80px;
+        margin-top: 30px;
+    }
+
+    #compliment {
+        font-size: 1.8rem;
+        color: white;
+        text-shadow: 0 0 10px rgba(255, 102, 102, 0.5);
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transform: translateY(20px);
+    }
+
+    #compliment.show {
+        animation: showCompliment 4s forwards;
+    }
+
+    @keyframes showCompliment {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        10%, 90% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+    }
+
+    /* Частицы при клике на букет */
+    .particle {
+        position: absolute;
+        pointer-events: none;
+        border-radius: 50%;
+        animation: particleFade 1s forwards;
+    }
+
+    @keyframes particleFade {
+        0% {
+            opacity: 1;
+            transform: translate(0, 0) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(var(--tx), var(--ty)) scale(0);
+        }
+    }
+
+    /* Медиа-запрос для мобильных устройств */
+    @media (max-width: 768px) {
+        .intro-screen h1 {
+            font-size: 3rem;
+        }
+
+        .intro-screen h2 {
+            font-size: 1.5rem;
+        }
+
+        #openBtn {
+            padding: 12px 24px;
+            font-size: 1.2rem;
+        }
+
+        .congrats-screen h2 {
+            font-size: 2rem;
+        }
+
+        .congrats-screen p {
+            font-size: 1.2rem;
+        }
+
+        .animated-bouquet {
+            width: 180px;
+            height: 220px;
+        }
+
+        #compliment {
+            font-size: 1.5rem;
+        }
+    }
+
+    /* Стили для третьего экрана */
+    .memories-screen {
+        display: none;
+        text-align: center;
+        color: #fff;
+        position: absolute;
+        z-index: 10;
+        width: 100%;
+        height: 100vh;
+        padding-top: 50px;
+    }
+
+    /* Исправление обрезки медиа */
+    #media-display {
+        width: 280px;
+        height: 280px;
+        margin: 20px auto;
+        border-radius: 50%;
+        border: 3px solid #ff6f61;
+        box-shadow: 0 0 30px rgba(255, 111, 97, 0.4);
+        overflow: hidden; /* Важно! */
+        position: relative;
+        background: #000; /* Фон для видимости контейнера */
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .media-wrapper {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    #media-display::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        box-shadow: inset 0 0 0 3px #ff6f61;
+        pointer-events: none;
+    }
+
+    .media-wrapper img,
+    .media-wrapper video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Обрезаем до круга */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .media-hint {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin: 15px 0;
+        animation: hintPulse 2s infinite;
+    }
+
+    @keyframes hintPulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+    }
+
+    #media-comment {
+        font-size: 1.4rem;
+        padding: 15px;
+        margin: 20px auto;
+        max-width: 500px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s ease;
+    }
+
+    #media-comment.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .nav-btn {
+        background: rgba(255, 111, 97, 0.2);
+        border: 2px solid #ff6f61;
+        color: #fff;
+        padding: 12px 25px;
+        border-radius: 30px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover {
+        background: rgba(255, 111, 97, 0.3);
+        box-shadow: 0 0 15px rgba(255, 111, 97, 0.4);
+    }
+
+    /* Стили для кнопки "Далее" на втором экране */
+    #nextBtn {
+        margin: 30px auto 0;
+        display: block;
+        width: fit-content;
+        position: relative;
+        z-index: 5;
+    }
+
+    /* Скрыть кнопку на третьем экране */
+    .memories-screen .nav-btn {
+    display: block !important; /* Переопределяем скрытие */
+    margin-top: 30px; /* Добавляем отступ */
+}
+
+    .media-wrapper video {
+        pointer-events: none; /* Блокировка взаимодействия с нативным плеером */
+    }
+    
+    /* Стили для второй страницы */
+    .page2-container {
+        width: 100%;
+        height: 100%;
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 20;
+    }
+    
+    .dot {
+        width: 35px;
+        height: 35px;
+        position: absolute;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30"><path d="M15 0 C20 10 25 15 15 30 C5 15 10 10 15 0" fill="%23ff6f61" opacity="0.7"/></svg>');
+        background-size: 100% 100%;
+    }
+    
+    #petals {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .card {
+        width: 100%;
+        max-width: 800px;
+        min-height: auto;
+        padding: 0;
+		background: transparent;
+		box-shadow: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 1;
+        transform-style: preserve-3d;
+        perspective: 200px;
+        opacity: 0;
+        transform: translate3d(-40%, -50%, 0) rotateY(15deg);
+        animation: card 2s linear 2s forwards;
+    }
+
+    .title {
+        margin-bottom: 10px;
+        background-image: linear-gradient(110deg, #ff6945 0%, #8047ca 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: #ff6945;
+        font-size: 80px;
+        line-height: 1;
+        text-align: center;
+    }
+    
+    /* Заменить текущие стили .text */
+	.text {
+		color: rgba(255, 255, 255, 0.9) !important;
+		font-family: 'Arial', sans-serif;
+		font-size: 1.8rem !important;
+		line-height: 1.5;
+		text-shadow: 
+			0 0 10px rgba(255, 111, 97, 0.5), 
+			0 0 20px rgba(255, 111, 97, 0.3),
+			0 0 30px rgba(255, 111, 97, 0.2);
+		margin: 20px 0;
+		padding: 15px;
+		border-radius: 15px;
+		
+		backdrop-filter: blur(5px);
+	}
+    
+    .author {
+        background-image: linear-gradient(110deg, #ff6945 0%, #8047ca 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        opacity: 0;
+        color: #121212;
+        font-size: 40px;
+        text-align: right;
+        padding-right: 40px;
+        transition: opacity 1s linear;
+    }
+	
+	#toPage2Btn {
+    display: block !important;
+    margin: 30px auto 0 !important; /* Центрирование */
+    width: fit-content;
+    position: static !important; /* Убрать абсолютное позиционирование */
+    transform: none !important;
+	}
+
+    #nextButton {
+        display: block;
+        margin: 20px auto 0;
+        padding: 10px 25px;
+        background-image: linear-gradient(110deg, #ff6945 0%, #8047ca 100%);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-family: 'Caveat', cursive;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.3s ease-in-out;
+    }
+
+    #nextButton:hover {
+        transform: translateY(15px) scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    @keyframes card {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .card {
+            transform: translate3d(-50%, -50%, 0) rotateY(0deg);
+            padding: 15px;
+            min-height: auto;
+        }
+        
+        .title {
+            font-size: 50px;
+        }
+        
+        .text {
+            font-size: 24px;
+        }
+        
+        .author {
+            font-size: 28px;
+            padding-right: 10px;
+        }
+    }
+
+    /* Кнопка управления музыкой */
+    .music-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: rgba(255, 111, 97, 0.3);
+        color: white;
+        font-size: 20px;
+        border: 2px solid rgba(255, 111, 97, 0.9);
+        cursor: pointer;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 10px rgba(255, 111, 97, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .music-toggle:hover {
+        background-color: rgba(255, 111, 97, 0.5);
+        box-shadow: 0 0 15px rgba(255, 111, 97, 0.5);
+    }
+
+    .music-toggle.playing {
+        animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 10px rgba(255, 111, 97, 0.3);
+        }
+        50% {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 111, 97, 0.5);
+        }
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 10px rgba(255, 111, 97, 0.3);
+        }
+    }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="stars"></div>
-<div id="petals-container"></div>
-
-<!-- Вступительный экран -->
-<div class="intro-screen">
-  <h1>С 8 Марта!</h1>
-  <h2>От твоего ученика</h2>
-  <button id="openBtn"><span>Открыть поздравление</span></button>
-</div>
-
-<!-- Экран с поздравлением и розой -->
-<div class="congrats-screen">
-
-  <h2>С праздником, пупсик!</h2>
-  <p>C 8 Марта тебя! Пусть весна принесет море улыбок, радости и кучу приятных сюрпризов! Оставайся такой же яркой и весёлой, как ты есть! <3</p>
-
-
-  <div class="bouquet-container">
-    <div class="animated-bouquet" id="bouquet-btn">
-      <div class="container">
-        <div class="glass"></div>
-        <div class="thorns">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <div class="glow"></div>
-        <div class="rose-leaves">
-          <div></div>
-          <div></div>
-        </div>
-        <div class="rose-petals">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <div class="sparkles">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
+    <!-- Первая страница -->
+    <div class="stars"></div>
+    <div id="petals-container"></div>
+    
+    <!-- Кнопка управления музыкой -->
+    <button id="musicToggle" class="music-toggle">♪</button>
+    <audio id="backgroundMusic" src="images/audio.mp3" preload="auto" loop></audio>
+    
+    <!-- Первый экран - приветствие -->
+    <div class="intro-screen">
+        <h1>С 8 Марта!</h1>
+        <h2>От твоего ученика</h2>
+        <button id="openBtn"><span>Открыть поздравление</span></button>
     </div>
-    <div class="bouquet-hint">Нажми на розу, чтобы получить комплимент</div>
-  </div>
-
-  <div id="compliment-container" class="compliment-container">
-    <div id="compliment" class="compliment"></div>
-  </div>
-    <button id="nextBtn" class="nav-btn">
-        <span>Далее ➔</span>
-    </button>
-</div>
-
-<!-- Третий экран с медиа -->
-<div class="memories-screen">
-    <h2>Мой цветочек</h2>
-
-    <div class="media-container">
-        <div class="media-circle" id="media-display"></div>
+    
+    <!-- Второй экран - поздравление с розой -->
+    <div class="congrats-screen">
+        <h2>С праздником, пупсик!</h2>
+        <p>C 8 Марта тебя! Пусть весна принесет море улыбок, радости и кучу приятных сюрпризов! Оставайся такой же яркой и весёлой, как ты есть! &lt;3</p>
+        
+        <!-- Анимированная роза в колбе -->
+        <div id="bouquet-btn" class="animated-bouquet">
+            <div class="container">
+                <div class="glass"></div>
+                <div class="glow"></div>
+                <div class="rose-petals">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="rose-leaves">
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="thorns">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="sparkles">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        
+        <p class="bouquet-hint">Нажми на розу, чтобы получить комплимент</p>
+        
+        <!-- Контейнер для отображения комплимента -->
+        <div class="compliment-container">
+            <div id="compliment"></div>
+        </div>
+        
+        <!-- Кнопка для перехода к следующему экрану -->
+        <button id="nextBtn" class="nav-btn">Далее ➔</button>
+    </div>
+    
+    <!-- Третий экран - воспоминания с медиа -->
+    <div class="memories-screen">
+        <h2>Мой цветочек</h2>
+        
+        <!-- Контейнер для отображения изображений/видео -->
+        <div id="media-display"></div>
+        
+        <p class="media-hint">Кликни на кружок, чтобы увидеть больше! ❤️</p>
+        
+        <!-- Комментарий к текущему медиа -->
+        <div id="media-comment"></div>
+        
+        <!-- Кнопка для перехода к следующему экрану -->
+        <button id="toPage2Btn" class="nav-btn">Далее ➔</button>
+    </div>
+    
+    <!-- Вторая страница -->
+    <div class="page2-container">
+        <div id="petals"></div>
+        <div class="card">
+            <h1 class="title">Любимая, с 8 марта!</h1>
+            <div class="text" id="text"></div>
+            <div class="author" id="author">- твой Прынц</div>
+        </div>
     </div>
 
-    <div class="media-hint">Кликни на кружок, чтобы увидеть больше! ❤️</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
+<script>
+// Объединенный JavaScript код
 
-    <div id="media-comment" class="media-comment"></div>
+// Список комплиментов
+const compliments = [
+    "Твоя улыбка озаряет мой мир!",
+    "Ты самая прекрасная и удивительная!",
+    "Твои глаза — как звезды в ночи!",
+    "Ты делаешь каждый день особенным!",
+    "Ты моя муза и вдохновение!",
+    "Твоя красота затмевает весенние цветы!",
+    "Ты — моя любимая загадка!",
+    "С тобой мир становится ярче!",
+    "Твой смех — лучшая мелодия!",
+    "Ты — самое ценное в моей жизни!",
+    "Ты прекрасна во всех смыслах!",
+    "Твоя душа чиста, как весеннее небо!",
+    "Ты украшаешь все вокруг своим присутствием!",
+    "Твои объятия — мой любимый уголок в мире!",
+    "Ты делаешь невозможное возможным!",
+    "Ты моя любимая история!",
+    "Ты восхитительна во всем!",
+    "Твоя нежность покоряет мое сердце!",
+    "Ты моя любимая причина для улыбки!",
+    "Ты как весна — несешь тепло и радость!"
+];
 
-    <button id="backBtn" class="nav-btn">
-        <span>← Вернуться к поздравлению</span>
-    </button>
-</div>
+// Создаем звезды
+function createStars() {
+    const starsContainer = document.querySelector('.stars');
+    for (let i = 0; i < 200; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.style.top = `${Math.random() * 100}vh`;
+        star.style.left = `${Math.random() * 100}vw`;
+        star.style.animationDelay = `${Math.random() * 2}s`;
+        starsContainer.appendChild(star);
+    }
+}
 
-<script src="script.js"></script>
+let backgroundMusic = document.getElementById('backgroundMusic');
+
+// Функция воспроизведения фоновой музыки
+function playBackgroundMusic() {
+    // Проверяем, была ли уже взаимодействие пользователя
+    const playPromise = backgroundMusic.play();
+    
+    // Если браузер требует взаимодействия пользователя для воспроизведения
+    if (playPromise !== undefined) {
+        playPromise.catch(error => {
+            console.log('Автовоспроизведение заблокировано. Требуется взаимодействие пользователя.');
+            
+            // Добавляем обработчик для запуска музыки при первом клике
+            const startAudioHandler = function() {
+                backgroundMusic.play();
+                document.removeEventListener('click', startAudioHandler);
+            };
+            
+            document.addEventListener('click', startAudioHandler);
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Инициализация
+    createStars();
+    
+    // Кнопка управления музыкой
+    const musicToggle = document.getElementById('musicToggle');
+    let isMusicPlaying = false;
+    
+    musicToggle.addEventListener('click', function() {
+        if (isMusicPlaying) {
+            backgroundMusic.pause();
+            musicToggle.classList.remove('playing');
+        } else {
+            backgroundMusic.play().catch(function(error) {
+                console.log('Audio playback failed:', error);
+            });
+            musicToggle.classList.add('playing');
+        }
+        isMusicPlaying = !isMusicPlaying;
+    });
+    
+    // Обработка открытия поздравления
+    const openBtn = document.getElementById('openBtn');
+    openBtn.addEventListener('click', function() {
+        document.querySelector('.intro-screen').style.opacity = '0';
+        setTimeout(() => {
+            document.querySelector('.intro-screen').style.display = 'none';
+            document.querySelector('.congrats-screen').classList.add('visible');
+            playBackgroundMusic();
+            musicToggle.classList.add('playing');
+            isMusicPlaying = true;
+        }, 1000);
+
+        // Увеличиваем интенсивность лепестков
+        setInterval(createPetal, 300);
+        
+        // Показываем кнопку
+        document.getElementById('nextBtn').style.display = 'block';
+    });
+    
+    // Обработчики для фона звезд
+    document.addEventListener('mousemove', (e) => {
+        const stars = document.querySelector('.stars');
+        const x = e.clientX / window.innerWidth * 10;
+        const y = e.clientY / window.innerHeight * 10;
+        stars.style.transform = `translate(${x}px, ${y}px)`;
+    });
+    
+    // Обработчик для розы
+    document.getElementById('bouquet-btn').addEventListener('click', function(e) {
+        createParticles(e.clientX, e.clientY);
+        for (let i = 0; i < 10; i++) setTimeout(createPetal, i * 100);
+        showRandomCompliment();
+    });
+    
+    // Начальные лепестки
+    setInterval(createPetal, 1000);
+    
+    // Данные для медиа
+    const mediaData = [
+        {
+            type: 'image',
+            src: 'images/photo1.jpg',
+            comment: 'Твои глаза – две искры света, В них отражается мечта. Как будто теплый луч рассвета, Как будто светлая весна. 🌸'
+        },
+        {
+            type: 'image',
+            src: 'images/photo2.jpg',
+            comment: 'Улыбка – нежность, что так греет, Как теплый ветер в летний день. И сердце трепетно немеет, Слова сплетаются в сирень. 🌸'
+        },
+        {
+            type: 'image',
+            src: 'images/photo3.jpg',
+            comment: 'Ты — вдохновение, ты — чудо, Ты — капля счастья в каждом дне. И пусть прекрасным этим утромСтихи дарю тебе я нежные. 🌸'
+        },
+    ];
+
+    let currentMediaIndex = 0;
+    let mediaElements = [];
+
+    // Предзагрузка медиа
+    function preloadMedia() {
+        mediaData.forEach((item, index) => {
+            if (item.type === 'image') {
+                const img = new Image();
+                img.src = item.src;
+                img.onload = () => mediaElements[index] = img;
+                img.onerror = () => console.error("Ошибка загрузки:", item.src);
+            } else {
+                const video = document.createElement('video');
+                video.src = item.src;
+                video.muted = item.muted;
+                video.preload = 'auto';
+                video.onerror = () => console.error("Ошибка загрузки:", item.src);
+                mediaElements[index] = video;
+            }
+        });
+    }
+
+    // Показать текущее медиа
+    function showCurrentMedia() {
+        const container = document.getElementById('media-display');
+        // Остановить предыдущее видео и очистить контейнер
+        container.querySelector('video')?.pause();
+        container.innerHTML = '';
+
+        if (!mediaElements[currentMediaIndex]) {
+            console.error("Медиа не загружено:", currentMediaIndex);
+            return;
+        }
+
+        const media = mediaElements[currentMediaIndex].cloneNode(true);
+        media.classList.add('active');
+
+        if (media.tagName === 'VIDEO') {
+            // Автовоспроизведение с отключением звука (требование браузеров)
+            media.autoplay = true;
+            media.muted = true;
+            media.setAttribute('playsinline', '');
+            media.setAttribute('webkit-playsinline', '');
+            media.loop = true;
+
+            // Блокировка контекстного меню
+            media.oncontextmenu = (e) => {
+                e.preventDefault();
+                return false;
+            };
+
+            // Принудительный запуск для мобильных устройств
+            media.play().catch(error => {
+                console.log('Автовоспроизведение заблокировано. Нужно взаимодействие пользователя.');
+            });
+        }
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'media-wrapper';
+        wrapper.appendChild(media);
+        container.appendChild(wrapper);
+
+        // Анимация комментария
+        const comment = document.getElementById('media-comment');
+        comment.classList.remove('show');
+        setTimeout(() => {
+            comment.textContent = mediaData[currentMediaIndex].comment;
+            comment.classList.add('show');
+        }, 300);
+    }
+
+    // Предзагрузка медиа
+    preloadMedia();
+
+    // Обработчик клика по медиа
+    document.getElementById('media-display').addEventListener('click', (e) => {
+        e.preventDefault(); // Блокировка стандартных действий
+        currentMediaIndex = (currentMediaIndex + 1) % mediaData.length;
+        showCurrentMedia();
+    });
+
+    // Переход на следующую страницу
+    document.getElementById('nextBtn').addEventListener('click', function() {
+        document.querySelector('.congrats-screen').classList.remove('visible');
+        document.querySelector('.memories-screen').style.display = 'block';
+        showCurrentMedia();
+    });
+    
+    // Переход на вторую страницу (petals)
+    document.getElementById('toPage2Btn').addEventListener('click', function() {
+        document.querySelector('.memories-screen').style.display = 'none';
+        document.querySelector('.page2-container').style.display = 'block';
+        
+        // Инициализация второй страницы
+        initPage2();
+    });
+    
+    // Настройка для второй страницы
+    document.getElementById('nextButton').addEventListener('click', function() {
+        // Обработка завершения
+        alert('Поздравление завершено! С 8 марта!');
+    });
+    
+    // Изначально скрываем кнопку
+    document.getElementById('nextBtn').style.display = 'none';
+});
+
+// Функция создания частиц при клике
+function createParticles(x, y) {
+    const container = document.body;
+    const count = 30; // Количество частиц
+
+    for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+
+        // Случайный размер частицы (от 5px до 10px)
+        const size = Math.random() * 8 + 4;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+
+        // Случайный цвет частицы (оттенки розового и красного)
+        const hue = Math.floor(Math.random() * 40) + 340; // от 340 до 380 (20) по шкале HSL
+        const saturation = Math.floor(Math.random() * 30) + 70; // от 70% до 100%
+        const lightness = Math.floor(Math.random() * 20) + 60; // от 60% до 80%
+        particle.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+
+        // Размещаем частицу в месте клика
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+
+        // Задаем случайное направление и расстояние движения
+        const tx = (Math.random() - 0.5) * 200; // Смещение по X (-100px до 100px)
+        const ty = (Math.random() - 0.5) * 200; // Смещение по Y (-100px до 100px)
+        particle.style.setProperty('--tx', `${tx}px`);
+        particle.style.setProperty('--ty', `${ty}px`);
+
+        // Добавляем частицу на страницу
+        container.appendChild(particle);
+
+        // Удаляем частицу после завершения анимации
+        particle.addEventListener('animationend', () => {
+            particle.remove();
+        });
+    }
+}
+
+// Функция для создания лепестка
+function createPetal() {
+    const petal = document.createElement('img');
+    // Используем data URI вместо файла для надежности
+    petal.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30"><path d="M15 0 C20 10 25 15 15 30 C5 15 10 10 15 0" fill="%23ff6f61" opacity="0.7"/></svg>';
+    petal.classList.add('petal');
+
+    // Случайный размер лепестка (от 20px до 50px)
+    const size = Math.floor(Math.random() * 30) + 20;
+    petal.style.width = `${size}px`;
+
+    // Случайная начальная позиция по X (в пределах ширины экрана)
+    const x = Math.random() * window.innerWidth;
+    petal.style.left = `${x}px`;
+
+    // Начальная позиция по Y (над верхней границей экрана)
+    petal.style.top = `-50px`;
+
+    // Случайное направление вращения (влево или вправо)
+    const rotationDirection = Math.random() > 0.5 ? 1 : -1;
+    const rotationSpeed = Math.random() * 360; // Случайная скорость вращения
+
+    // Случайное отклонение по горизонтали
+    const horizontalDrift = (Math.random() - 0.5) * 200; // Отклонение от -100px до 100px
+
+    // Добавляем лепесток в контейнер
+    const petalsContainer = document.getElementById('petals-container');
+    if (petalsContainer) {
+        petalsContainer.appendChild(petal);
+    }
+
+    // Анимация падения
+    const animationDuration = Math.random() * 3 + 2; // Случайная длительность падения (2-5 секунд)
+    petal.style.animation = `fall ${animationDuration}s linear forwards`;
+
+    // Управление отклонением по горизонтали
+    petal.style.setProperty('--drift', `${horizontalDrift}px`);
+
+    // Удаляем лепесток после завершения анимации
+    petal.addEventListener('animationend', () => {
+        petal.remove();
+    });
+
+    // Вращение лепестка
+    let rotation = 0;
+    const rotatePetal = () => {
+        rotation += rotationSpeed * rotationDirection * 0.01;
+        petal.style.transform = `rotate(${rotation}deg)`;
+        requestAnimationFrame(rotatePetal);
+    };
+    requestAnimationFrame(rotatePetal);
+}
+
+// Функция для показа случайного комплимента
+function showRandomCompliment() {
+    const complimentElement = document.getElementById('compliment');
+    if (!complimentElement) return;
+
+    // Удаляем класс показа, если он есть
+    complimentElement.classList.remove('show');
+
+    // Ожидаем, пока анимация исчезновения завершится
+    setTimeout(() => {
+        // Выбираем случайный комплимент
+        const randomIndex = Math.floor(Math.random() * compliments.length);
+        complimentElement.textContent = compliments[randomIndex];
+
+        // Добавляем класс для показа комплимента
+        complimentElement.classList.add('show');
+    }, 100); // Короткая задержка для сброса анимации
+}
+
+// Функция для инициализации второй страницы
+function initPage2() {
+    // GSAP анимации
+    TweenLite.set("#petals", { perspective: 600 });
+    
+    var total = 50;
+    var warp = document.getElementById("petals"),
+    w = window.innerWidth,
+    h = window.innerHeight;
+
+    for (i = 0; i < total; i++) {
+        var Div = document.createElement('div');
+        TweenLite.set(Div, { attr: { class:'dot' }, x:R(0,w), y:R(-200,-150), z:R(-200,200)});
+        warp.appendChild(Div);
+        animm(Div);
+    }
+
+    function animm(elm) {
+        TweenMax.to(elm,R(6,15), { y:h+100, ease:Linear.easeNone, repeat:-1, delay:-15 });
+        TweenMax.to(elm,R(4,8), { x:'+=100', rotationZ:R(0,180), repeat:-1, yoyo:true, ease:Sine.easeInOut });
+        TweenMax.to(elm,R(2,8), { rotationX:R(0,360), rotationY:R(0,360), repeat:-1, yoyo:true, ease:Sine.easeInOut, delay:-5 });
+    }
+
+    function R(min,max) { return min+Math.random() * (max-min) }
+    
+    // Typed.js для анимированного текста
+    setTimeout(function() {
+        var typed = new Typed('#text', {
+            strings: ['Желаю весеннего настроения, пусть на душе всегда будет светло и радостно. Желаю, чтобы на лице всегда сияла улыбка, пусть жизнь будет щедра на подарки. В самый женский день года желаю простого женского счастья и здоровья.'],
+            startDelay: 1000,
+            typeSpeed: 50,
+            backSpeed: 0,
+            fadeOut: true,
+            loop: false,
+            showCursor: false,
+            onComplete: function() {
+                var author = document.getElementById("author");
+                author.style.opacity = 1;
+                
+                // Show the Next button after text animation completes
+                setTimeout(function() {
+                    var nextButton = document.getElementById("nextButton");
+                    nextButton.style.opacity = 1;
+                    nextButton.style.transform = "translateY(0)";
+                }, 1000);
+            }
+        });
+    }, 500);
+}
+
+// Typed.js библиотека
+/*!
+ * 
+ *   typed.js - A JavaScript Typing Animation Library
+ *   Author: Matt Boldt <me@mattboldt.com>
+ *   Version: v2.0.9
+ *   Url: https://github.com/mattboldt/typed.js
+ *   License(s): MIT
+ * 
+ */
+(function(t,e){"object"==typeof exports&&"object"==typeof module?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.Typed=e():t.Typed=e()})(this,function(){return function(t){function e(n){if(s[n])return s[n].exports;var i=s[n]={exports:{},id:n,loaded:!1};return t[n].call(i.exports,i,i.exports,e),i.loaded=!0,i.exports}var s={};return e.m=t,e.c=s,e.p="",e(0)}([function(t,e,s){"use strict";function n(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(e,"__esModule",{value:!0});var i=function(){function t(t,e){for(var s=0;s<e.length;s++){var n=e[s];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(t,n.key,n)}}return function(e,s,n){return s&&t(e.prototype,s),n&&t(e,n),e}}(),r=s(1),o=s(3),a=function(){function t(e,s){n(this,t),r.initializer.load(this,s,e),this.begin()}return i(t,[{key:"toggle",value:function(){this.pause.status?this.start():this.stop()}},{key:"stop",value:function(){this.typingComplete||this.pause.status||(this.toggleBlinking(!0),this.pause.status=!0,this.options.onStop(this.arrayPos,this))}},{key:"start",value:function(){this.typingComplete||this.pause.status&&(this.pause.status=!1,this.pause.typewrite?this.typewrite(this.pause.curString,this.pause.curStrPos):this.backspace(this.pause.curString,this.pause.curStrPos),this.options.onStart(this.arrayPos,this))}},{key:"destroy",value:function(){this.reset(!1),this.options.onDestroy(this)}},{key:"reset",value:function(){var t=arguments.length<=0||void 0===arguments[0]||arguments[0];clearInterval(this.timeout),this.replaceText(""),this.cursor&&this.cursor.parentNode&&(this.cursor.parentNode.removeChild(this.cursor),this.cursor=null),this.strPos=0,this.arrayPos=0,this.curLoop=0,t&&(this.insertCursor(),this.options.onReset(this),this.begin())}},{key:"begin",value:function(){var t=this;this.typingComplete=!1,this.shuffleStringsIfNeeded(this),this.insertCursor(),this.bindInputFocusEvents&&this.bindFocusEvents(),this.timeout=setTimeout(function(){t.currentElContent&&0!==t.currentElContent.length?t.backspace(t.currentElContent,t.currentElContent.length):t.typewrite(t.strings[t.sequence[t.arrayPos]],t.strPos)},this.startDelay)}},{key:"typewrite",value:function(t,e){var s=this;this.fadeOut&&this.el.classList.contains(this.fadeOutClass)&&(this.el.classList.remove(this.fadeOutClass),this.cursor&&this.cursor.classList.remove(this.fadeOutClass));var n=this.humanizer(this.typeSpeed),i=1;return this.pause.status===!0?void this.setPauseStatus(t,e,!0):void(this.timeout=setTimeout(function(){e=o.htmlParser.typeHtmlChars(t,e,s);var n=0,r=t.substr(e);if("^"===r.charAt(0)&&/^\^\d+/.test(r)){var a=1;r=/\d+/.exec(r)[0],a+=r.length,n=parseInt(r),s.temporaryPause=!0,s.options.onTypingPaused(s.arrayPos,s),t=t.substring(0,e)+t.substring(e+a),s.toggleBlinking(!0)}if("`"===r.charAt(0)){for(;"`"!==t.substr(e+i).charAt(0)&&(i++,!(e+i>t.length)););var u=t.substring(0,e),l=t.substring(u.length+1,e+i),c=t.substring(e+i+1);t=u+l+c,i--}s.timeout=setTimeout(function(){s.toggleBlinking(!1),e>=t.length?s.doneTyping(t,e):s.keepTyping(t,e,i),s.temporaryPause&&(s.temporaryPause=!1,s.options.onTypingResumed(s.arrayPos,s))},n)},n))}},{key:"keepTyping",value:function(t,e,s){0===e&&(this.toggleBlinking(!1),this.options.preStringTyped(this.arrayPos,this)),e+=s;var n=t.substr(0,e);this.replaceText(n),this.typewrite(t,e)}},{key:"doneTyping",value:function(t,e){var s=this;this.options.onStringTyped(this.arrayPos,this),this.toggleBlinking(!0),this.arrayPos===this.strings.length-1&&(this.complete(),this.loop===!1||this.curLoop===this.loopCount)||(this.timeout=setTimeout(function(){s.backspace(t,e)},this.backDelay))}},{key:"backspace",value:function(t,e){var s=this;if(this.pause.status===!0)return void this.setPauseStatus(t,e,!0);if(this.fadeOut)return this.initFadeOut();this.toggleBlinking(!1);var n=this.humanizer(this.backSpeed);this.timeout=setTimeout(function(){e=o.htmlParser.backSpaceHtmlChars(t,e,s);var n=t.substr(0,e);if(s.replaceText(n),s.smartBackspace){var i=s.strings[s.arrayPos+1];i&&n===i.substr(0,e)?s.stopNum=e:s.stopNum=0}e>s.stopNum?(e--,s.backspace(t,e)):e<=s.stopNum&&(s.arrayPos++,s.arrayPos===s.strings.length?(s.arrayPos=0,s.options.onLastStringBackspaced(),s.shuffleStringsIfNeeded(),s.begin()):s.typewrite(s.strings[s.sequence[s.arrayPos]],e))},n)}},{key:"complete",value:function(){this.options.onComplete(this),this.loop?this.curLoop++:this.typingComplete=!0}},{key:"setPauseStatus",value:function(t,e,s){this.pause.typewrite=s,this.pause.curString=t,this.pause.curStrPos=e}},{key:"toggleBlinking",value:function(t){this.cursor&&(this.pause.status||this.cursorBlinking!==t&&(this.cursorBlinking=t,t?this.cursor.classList.add("typed-cursor--blink"):this.cursor.classList.remove("typed-cursor--blink")))}},{key:"humanizer",value:function(t){return Math.round(Math.random()*t/2)+t}},{key:"shuffleStringsIfNeeded",value:function(){this.shuffle&&(this.sequence=this.sequence.sort(function(){return Math.random()-.5}))}},{key:"initFadeOut",value:function(){var t=this;return this.el.className+=" "+this.fadeOutClass,this.cursor&&(this.cursor.className+=" "+this.fadeOutClass),setTimeout(function(){t.arrayPos++,t.replaceText(""),t.strings.length>t.arrayPos?t.typewrite(t.strings[t.sequence[t.arrayPos]],0):(t.typewrite(t.strings[0],0),t.arrayPos=0)},this.fadeOutDelay)}},{key:"replaceText",value:function(t){this.attr?this.el.setAttribute(this.attr,t):this.isInput?this.el.value=t:"html"===this.contentType?this.el.innerHTML=t:this.el.textContent=t}},{key:"bindFocusEvents",value:function(){var t=this;this.isInput&&(this.el.addEventListener("focus",function(e){t.stop()}),this.el.addEventListener("blur",function(e){t.el.value&&0!==t.el.value.length||t.start()}))}},{key:"insertCursor",value:function(){this.showCursor&&(this.cursor||(this.cursor=document.createElement("span"),this.cursor.className="typed-cursor",this.cursor.innerHTML=this.cursorChar,this.el.parentNode&&this.el.parentNode.insertBefore(this.cursor,this.el.nextSibling)))}}]),t}();e["default"]=a,t.exports=e["default"]},function(t,e,s){"use strict";function n(t){return t&&t.__esModule?t:{"default":t}}function i(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(e,"__esModule",{value:!0});var r=Object.assign||function(t){for(var e=1;e<arguments.length;e++){var s=arguments[e];for(var n in s)Object.prototype.hasOwnProperty.call(s,n)&&(t[n]=s[n])}return t},o=function(){function t(t,e){for(var s=0;s<e.length;s++){var n=e[s];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(t,n.key,n)}}return function(e,s,n){return s&&t(e.prototype,s),n&&t(e,n),e}}(),a=s(2),u=n(a),l=function(){function t(){i(this,t)}return o(t,[{key:"load",value:function(t,e,s){if("string"==typeof s?t.el=document.querySelector(s):t.el=s,t.options=r({},u["default"],e),t.isInput="input"===t.el.tagName.toLowerCase(),t.attr=t.options.attr,t.bindInputFocusEvents=t.options.bindInputFocusEvents,t.showCursor=!t.isInput&&t.options.showCursor,t.cursorChar=t.options.cursorChar,t.cursorBlinking=!0,t.elContent=t.attr?t.el.getAttribute(t.attr):t.el.textContent,t.contentType=t.options.contentType,t.typeSpeed=t.options.typeSpeed,t.startDelay=t.options.startDelay,t.backSpeed=t.options.backSpeed,t.smartBackspace=t.options.smartBackspace,t.backDelay=t.options.backDelay,t.fadeOut=t.options.fadeOut,t.fadeOutClass=t.options.fadeOutClass,t.fadeOutDelay=t.options.fadeOutDelay,t.isPaused=!1,t.strings=t.options.strings.map(function(t){return t.trim()}),"string"==typeof t.options.stringsElement?t.stringsElement=document.querySelector(t.options.stringsElement):t.stringsElement=t.options.stringsElement,t.stringsElement){t.strings=[],t.stringsElement.style.display="none";var n=Array.prototype.slice.apply(t.stringsElement.children),i=n.length;if(i)for(var o=0;o<i;o+=1){var a=n[o];t.strings.push(a.innerHTML.trim())}}t.strPos=0,t.arrayPos=0,t.stopNum=0,t.loop=t.options.loop,t.loopCount=t.options.loopCount,t.curLoop=0,t.shuffle=t.options.shuffle,t.sequence=[],t.pause={status:!1,typewrite:!0,curString:"",curStrPos:0},t.typingComplete=!1;for(var o in t.strings)t.sequence[o]=o;t.currentElContent=this.getCurrentElContent(t),t.autoInsertCss=t.options.autoInsertCss,this.appendAnimationCss(t)}},{key:"getCurrentElContent",value:function(t){var e="";return e=t.attr?t.el.getAttribute(t.attr):t.isInput?t.el.value:"html"===t.contentType?t.el.innerHTML:t.el.textContent}},{key:"appendAnimationCss",value:function(t){var e="data-typed-js-css";if(t.autoInsertCss&&(t.showCursor||t.fadeOut)&&!document.querySelector("["+e+"]")){var s=document.createElement("style");s.type="text/css",s.setAttribute(e,!0);var n="";t.showCursor&&(n+="\n        .typed-cursor{\n          opacity: 1;\n        }\n        .typed-cursor.typed-cursor--blink{\n          animation: typedjsBlink 0.7s infinite;\n          -webkit-animation: typedjsBlink 0.7s infinite;\n                  animation: typedjsBlink 0.7s infinite;\n        }\n        @keyframes typedjsBlink{\n          50% { opacity: 0.0; }\n        }\n        @-webkit-keyframes typedjsBlink{\n          0% { opacity: 1; }\n          50% { opacity: 0.0; }\n          100% { opacity: 1; }\n        }\n      "),t.fadeOut&&(n+="\n        .typed-fade-out{\n          opacity: 0;\n          transition: opacity .25s;\n        }\n        .typed-cursor.typed-cursor--blink.typed-fade-out{\n          -webkit-animation: 0;\n          animation: 0;\n        }\n      "),0!==s.length&&(s.innerHTML=n,document.body.appendChild(s))}}}]),t}();e["default"]=l;var c=new l;e.initializer=c},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var s={strings:["These are the default values...","You know what you should do?","Use your own!","Have a great day!"],stringsElement:null,typeSpeed:0,startDelay:0,backSpeed:0,smartBackspace:!0,shuffle:!1,backDelay:700,fadeOut:!1,fadeOutClass:"typed-fade-out",fadeOutDelay:500,loop:!1,loopCount:1/0,showCursor:!0,cursorChar:"|",autoInsertCss:!0,attr:null,bindInputFocusEvents:!1,contentType:"html",onComplete:function(t){},preStringTyped:function(t,e){},onStringTyped:function(t,e){},onLastStringBackspaced:function(t){},onTypingPaused:function(t,e){},onTypingResumed:function(t,e){},onReset:function(t){},onStop:function(t,e){},onStart:function(t,e){},onDestroy:function(t){}};e["default"]=s,t.exports=e["default"]},function(t,e){"use strict";function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(e,"__esModule",{value:!0});var n=function(){function t(t,e){for(var s=0;s<e.length;s++){var n=e[s];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(t,n.key,n)}}return function(e,s,n){return s&&t(e.prototype,s),n&&t(e,n),e}}(),i=function(){function t(){s(this,t)}return n(t,[{key:"typeHtmlChars",value:function(t,e,s){if("html"!==s.contentType)return e;var n=t.substr(e).charAt(0);if("<"===n||"&"===n){var i="";for(i="<"===n?">":";";t.substr(e+1).charAt(0)!==i&&(e++,!(e+1>t.length)););e++}return e}},{key:"backSpaceHtmlChars",value:function(t,e,s){if("html"!==s.contentType)return e;var n=t.substr(e).charAt(0);if(">"===n||";"===n){var i="";for(i=">"===n?"<":"&";t.substr(e-1).charAt(0)!==i&&(e--,!(e<0)););e--}return e}}]),t}();e["default"]=i;var r=new i;e.htmlParser=r}])});
+</script>
 </body>
 </html>
